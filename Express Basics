@@ -1,0 +1,108 @@
+ // app.js
+
+const express = require('express');
+const app = express();
+const port = 3000;
+var bodyParser=require("body-parser");
+
+let numOfREQ=0;
+app.use(bodyParser.json()); 
+
+function middleware1(req,res,next){
+    numOfREQ+=1;
+    console.log(numOfREQ);
+    next();
+}
+
+// app.use(middleware1) 
+
+// Basic route
+// app.get('/', (req, res) => {
+//   res.send('Hello, Express!');
+// });
+
+function createUser(req,res){
+    res.send("Hello world");
+}
+
+function handleFirstRequest(req,res){
+    // console.log(req.headers);
+    console.log(req.body);
+    var counter=req.body.counter;
+    var calculatedSum=calculateSum(counter);
+
+    var answer="the sum is "+ calculatedSum;
+    res.send(answer);
+}
+
+app.post("/calSum",handleFirstRequest)
+
+function statusCodeCheck(req,res){
+    var counter = req.body.counter;
+
+    var calculatedSum=calculateSum(counter);
+    var calculatedFact=calculateFact(counter);
+
+    var answerObj = { 
+        sum: calculatedSum,
+        factorial: calculatedFact
+    }
+    res.status(200).send(answerObj);
+}
+app.post("/statusTrial",statusCodeCheck);
+
+app.get("/",getPage);
+
+
+function getPage(req,res){
+    res.send(`<!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hello, World!</title>
+    </head>
+    <body>
+        <h1>Hello, World!</h1>
+    </body>
+    </html>
+    `); 
+}
+ 
+
+
+function handleFirstReq(req,res){
+    let counter=req.query.counter;
+    var calculatedSum=calculateSum(counter);
+    console.log(calculateSum)
+    var answer="the sum is "+ calculatedSum;
+    res.send(answer);
+}
+
+app.get("/exp",handleFirstReq)
+ 
+
+// Start the server
+app.listen(port, () => {
+  console.log(`Server is listening at http://localhost:${port}`);
+});
+
+
+function calculateSum(counter){
+    let sum=0;
+    for(var i=0;i<counter;i++){
+        sum=sum+i;
+    }
+    return sum;
+}
+
+
+function calculateFact(counter){
+    let fact=1;
+    for (var i=1;i<=counter;i++){
+        fact*=i;
+    }
+    return fact;
+}
+
+
