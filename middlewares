@@ -1,0 +1,32 @@
+const express=require("express");
+const app=express();
+
+function isEligible(age){
+    if(age>=14){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+function isEligibleMID(req,res,next){
+    const age=req.query.age;
+    if(age>=14){
+        next();
+    }
+    else{
+        res.json({
+            msg:"Yor are not eligible"
+        });
+    }
+}
+
+app.get("/ride1",isEligibleMID,function(req,res){//passing control to middleware isEligibleMID to check the age 
+        res.json({
+            msg:"You are eligible for ride"
+        })
+})
+
+app.listen(3000);
+
