@@ -1,0 +1,21 @@
+const jwt = require("jsonwebtoken")
+const jwtPassword = "secret";
+const zod=require("zod")
+
+const emailSchema=zod.string().email();
+const passwordSchema=zod.string().min(6);
+
+function signJwt(username,password){
+    const finalUsername=emailSchema.safeParse(username)
+    const passwordUsername=passwordSchema.safeParse(password);
+
+     if(!finalUsername.success||!passwordUsername.success){
+        return null;
+     }
+
+    const signature=jwt.sign({username},jwtPassword)
+    return signature;
+}
+ 
+const data=signJwt("anuragnegi@gmail.com","765876545678")
+console.log(data)
